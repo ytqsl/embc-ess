@@ -1,8 +1,11 @@
+using Gov.Jag.Embc.Public.DataInterfaces;
 using Gov.Jag.Embc.Public.Services.Registrations;
 using Gov.Jag.Embc.Public.Utils;
+using Gov.Jag.Embc.Public.ViewModels.Search;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,10 +17,12 @@ namespace embc_app.Controllers
     public class ReportsController : Controller
     {
         private readonly IMediator mediator;
+        private readonly IDataInterface dataInterface;
 
-        public ReportsController(IMediator mediator)
+        public ReportsController(IMediator mediator, IDataInterface dataInterface)
         {
             this.mediator = mediator;
+            this.dataInterface = dataInterface;
         }
 
         [HttpGet("registration/audit/{id}")]
@@ -50,6 +55,19 @@ namespace embc_app.Controllers
             var results = await mediator.Send(new RegistrationAuditQueryRequest(essFileNumber));
 
             return Json(results);
+        }
+
+        [HttpGet("evacuees")]
+        public async Task<IActionResult> GetEvacuees([FromQuery] EvacueeSearchQueryParameters query)
+        {
+            var evacuees = await dataInterface.GetEvacueesAsync(query);
+
+            var fileName = $"evacuees_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
+            Response.Headers.Add("Content-Disposition", $"inline; filename=\"x{fileName}\"");
+
+            return Content(evacuees
+                .Select(e => e)
+                .ToCSV(), "text/csv");
         }
     }
 }

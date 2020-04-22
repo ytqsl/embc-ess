@@ -20,7 +20,7 @@ namespace Gov.Jag.Embc.Public.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] EvacueeSearchQueryParameters query)
         {
-            var evacuees = await dataInterface.GetEvacueesAsync(query);
+            var evacuees = await dataInterface.GetPaginatedEvacueesAsync(query);
             return Json(evacuees);
         }
     }

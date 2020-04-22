@@ -29,9 +29,9 @@ namespace embc_unit_tests
 
             var result = await di.GetEvacueesAsync(new EvacueeSearchQueryParameters());
 
-            Assert.Equal(registration.HeadOfHousehold.FamilyMembers.Count(), result.Items.Count(e => !e.IsHeadOfHousehold));
-            Assert.Equal(1, result.Items.Count(e => e.IsHeadOfHousehold));
-            Assert.All(result.Items, e =>
+            Assert.Equal(registration.HeadOfHousehold.FamilyMembers.Count(), result.Count(e => !e.IsHeadOfHousehold));
+            Assert.Equal(1, result.Count(e => e.IsHeadOfHousehold));
+            Assert.All(result, e =>
             {
                 Assert.Equal(registration.IncidentTask.TaskNumber, e.IncidentTaskNumber);
                 Assert.Equal(registration.Id, e.RegistrationId);
@@ -58,7 +58,7 @@ namespace embc_unit_tests
 
             var result = await di.GetEvacueesAsync(new EvacueeSearchQueryParameters() { Query = lastName });
 
-            Assert.All(result.Items, e => Assert.Equal(lastName, e.LastName));
+            Assert.All(result, e => Assert.Equal(lastName, e.LastName));
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace embc_unit_tests
 
             var result = await di.GetEvacueesAsync(new EvacueeSearchQueryParameters() { Query = lastName });
 
-            Assert.All(result.Items, e => Assert.Contains(lastName, e.LastName));
+            Assert.All(result, e => Assert.Contains(lastName, e.LastName));
         }
 
         [Fact]
@@ -92,7 +92,7 @@ namespace embc_unit_tests
 
             var result = await di.GetEvacueesAsync(new EvacueeSearchQueryParameters() { Query = "1234" });
 
-            Assert.Empty(result.Items);
+            Assert.Empty(result);
         }
 
         [Fact]
@@ -109,7 +109,7 @@ namespace embc_unit_tests
 
             var result = await di.GetEvacueesAsync(new EvacueeSearchQueryParameters() { Query = lastName.Substring(1, 3) });
 
-            Assert.All(result.Items, e => Assert.Contains(lastName, e.LastName));
+            Assert.All(result, e => Assert.Contains(lastName, e.LastName));
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace embc_unit_tests
 
             var result = await di.GetEvacueesAsync(new EvacueeSearchQueryParameters() { Query = hostCommunityName });
 
-            Assert.All(result.Items, e => Assert.Contains(hostCommunityName, e.EvacuatedTo));
+            Assert.All(result, e => Assert.Contains(hostCommunityName, e.EvacuatedTo));
         }
 
         [Fact]
@@ -143,7 +143,7 @@ namespace embc_unit_tests
 
             var result = await di.GetEvacueesAsync(new EvacueeSearchQueryParameters() { Query = incidentCommunityName });
 
-            Assert.All(result.Items, e => Assert.Contains(incidentCommunityName, e.EvacuatedFrom));
+            Assert.All(result, e => Assert.Contains(incidentCommunityName, e.EvacuatedFrom));
         }
 
         [Fact]
@@ -158,7 +158,7 @@ namespace embc_unit_tests
 
             var result = await di.GetEvacueesAsync(new EvacueeSearchQueryParameters() { Query = incidentTaskId });
 
-            Assert.All(result.Items, e => Assert.Equal(incidentTaskId, e.IncidentTaskNumber));
+            Assert.All(result, e => Assert.Equal(incidentTaskId, e.IncidentTaskNumber));
         }
 
         [Fact]
@@ -175,7 +175,7 @@ namespace embc_unit_tests
 
             var result = await di.GetEvacueesAsync(new EvacueeSearchQueryParameters() { Query = registrationId });
 
-            Assert.All(result.Items, e => Assert.Equal(registrationId, e.RegistrationId));
+            Assert.All(result, e => Assert.Equal(registrationId, e.RegistrationId));
         }
 
         [Theory]
@@ -193,7 +193,7 @@ namespace embc_unit_tests
 
             var result = await di.GetEvacueesAsync(search);
 
-            Assert.Equal(expectedNumberOfEvacuees, result.Items.Count());
+            Assert.Equal(expectedNumberOfEvacuees, result.Count());
         }
 
         public static IEnumerable<object[]> GetAdvancedSearchTestCases()

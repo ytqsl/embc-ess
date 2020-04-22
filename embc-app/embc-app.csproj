@@ -15,14 +15,6 @@
         <StartupObject>Gov.Jag.Embc.Public.Program</StartupObject>
         <ProjectGuid>{8FE0A3D0-B466-41E3-91A9-3AB6207C15E5}</ProjectGuid>
         <LangVersion>latest</LangVersion>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <WarningsAsErrors />
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <WarningsAsErrors />
     </PropertyGroup>
