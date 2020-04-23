@@ -3,6 +3,7 @@ using Gov.Jag.Embc.Public.Utils;
 using Gov.Jag.Embc.Public.ViewModels.Search;
 using MediatR;
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,7 +27,7 @@ namespace Gov.Jag.Embc.Public.Services.Evacuees
             {
                 FileName = $"Evacuee_Export_{DateTime.Now:yyyyMMdd_HHmmss}.csv",
                 ContentType = "text/csv",
-                Content = evacueees.ToCSV()
+                Content = evacueees.ToCSVStream()
             };
         }
     }
@@ -41,6 +42,6 @@ namespace Gov.Jag.Embc.Public.Services.Evacuees
     {
         public string FileName { get; set; }
         public string ContentType { get; set; }
-        public string Content { get; set; }
+        public Stream Content { get; set; }
     }
 }

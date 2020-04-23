@@ -59,8 +59,7 @@ namespace embc_app.Controllers
         {
             var report = await mediator.Send(new GenerateEvacueesReport { Format = "CSV", SearchCriteria = query });
 
-            Response.Headers.Add("Content-Disposition", $"inline; filename=\"x{report.FileName}\"");
-            return Content(report.Content, report.ContentType);
+            return File(report.Content, report.ContentType, report.FileName);
         }
     }
 }
