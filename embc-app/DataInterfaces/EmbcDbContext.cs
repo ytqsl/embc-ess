@@ -195,6 +195,8 @@ namespace Gov.Jag.Embc.Public.DataInterfaces
                 .HasForeignKey("EssFileNumber");
 
             modelBuilder.AddShadowProperties();
+
+            modelBuilder.Query<ViewModels.EvacueeListItem>();
         }
 
         public override int SaveChanges()
@@ -230,5 +232,66 @@ namespace Gov.Jag.Embc.Public.DataInterfaces
                 }
             }
         }
+
+        private const string EvacueeListItemQuery = @"
+SELECT
+
+    e.RegistrationId,
+    e.EvacueeSequenceNumber,
+    t.TaskNumber,
+    t.TaskNumberStartDate,
+    t.TaskNumberEndDate,
+    er.Active,
+    er.RegistrationCompletionDate,
+    er.SelfRegisteredDate,
+    er.Facility,
+    from_c.Name AS EvacuatedFrom,
+    ISNULL(to_c.Name, t.RegionName) AS EvacuatedTo,
+    e.EvacueeTypeCode,
+    e.FirstName,
+    e.LastName,
+    CAST(e.Dob AS VARCHAR(10)) AS Dob,
+    e.Gender,
+    er.PhoneNumber,
+    er.PhoneNumberAlt,
+    er.Email,
+    adp.AddressLine1 AS Primary_AddressLine,
+    adp.City AS Primary_City,
+    (SELECT Name FROM Communities WHERE Id = adp.CommunityId) AS Primary_Community,
+    (SELECT Name FROM Countries WHERE CountryCode = adp.CountryCode) AS Primary_Country,
+    adp.Province AS Primary_Province,
+    adp.PostalCode AS Primary_PostalCode,
+    adm.AddressLine1 AS Mailing_AddressLine,
+    adm.City AS Mailing_City,
+    (SELECT Name FROM Communities WHERE Id = adm.CommunityId) AS Mailing_Community,
+    (SELECT Name FROM Countries WHERE CountryCode = adm.CountryCode) AS Mailing_Country,
+    adm.Province AS Mailing_Province,
+    adm.PostalCode AS Mailing_PostalCode,
+    (SELECT COUNT(*) FROM Referrals r WHERE r.RegistrationId = e.RegistrationId) AS NumberOfReferrals,
+    er.HasPets,
+    er.InsuranceCode,
+    er.HasInquiryReferral,
+    er.HasHealthServicesReferral,
+    er.HasFirstAidReferral,
+    er.HasPersonalServicesReferral,
+    er.HasChildCareReferral,
+    er.HasPetCareReferral
+FROM
+
+    Evacuees e
+INNER JOIN
+
+    EvacueeRegistrations er ON e.RegistrationId = er.EssFileNumber
+LEFT OUTER JOIN
+    IncidentTasks t ON er.IncidentTaskId = t.Id
+LEFT OUTER JOIN
+    Communities from_c ON t.CommunityId = from_c.Id
+LEFT OUTER JOIN
+    Communities to_c ON er.HostCommunityId = to_c.Id
+LEFT OUTER JOIN
+    EvacueeRegistrationAddresses adp ON e.RegistrationId = adp.RegistrationId AND adp.AddressTypeCode = 'Primary'
+LEFT OUTER JOIN
+    EvacueeRegistrationAddresses adm ON e.RegistrationId = adm.RegistrationId AND adm.AddressTypeCode = 'Mailing'
+";
     }
 }

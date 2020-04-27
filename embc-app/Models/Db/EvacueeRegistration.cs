@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Gov.Jag.Embc.Public.Models.Db
 {
@@ -68,5 +69,31 @@ namespace Gov.Jag.Embc.Public.Models.Db
 
         [NotMapped]
         public bool IsFinalized => RegistrationCompletionDate.HasValue;
+
+        public IEnumerable<Referral> Referrals { get; set; }
+
+        [NotMapped]
+        public int NumberOfReferrals { get => Referrals == null ? 0 : Referrals.Count(); }
+
+        [NotMapped]
+        public EvacueeRegistrationAddress PrimaryAddress { get => EvacueeRegistrationAddresses.Single(a => a.AddressType == Enumerations.AddressType.Primary); }
+
+        [NotMapped]
+        public string PrimaryAddressLine { get => PrimaryAddress?.AddressLine1; }
+
+        [NotMapped]
+        public string PrimaryAddressCity { get => PrimaryAddress?.City; }
+
+        [NotMapped]
+        public string PrimaryAddressCountry { get => PrimaryAddress?.Country?.Name; }
+
+        [NotMapped]
+        public string PrimaryAddressProvince { get => PrimaryAddress?.Province; }
+
+        [NotMapped]
+        public string PrimaryAddressPostalCode { get => PrimaryAddress?.PostalCode; }
+
+        [NotMapped]
+        public EvacueeRegistrationAddress MailingAddress { get => EvacueeRegistrationAddresses.SingleOrDefault(a => a.AddressType == Enumerations.AddressType.Mailing); }
     }
 }

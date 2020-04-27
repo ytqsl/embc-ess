@@ -29,6 +29,7 @@ namespace Gov.Jag.Embc.Public.Utils
             {
                 sw.WriteLine(item);
             }
+            sw.Flush();
             st.Seek(0, SeekOrigin.Begin);
             return st;
         }
