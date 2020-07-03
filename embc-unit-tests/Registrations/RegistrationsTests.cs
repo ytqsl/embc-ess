@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.Xunit2;
+using Gov.Jag.Embc.Public;
 using Gov.Jag.Embc.Public.DataInterfaces;
 using Gov.Jag.Embc.Public.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -69,7 +70,7 @@ namespace embc_unit_tests.Registrations
 
     public class RegistrationsTests : TestBase
     {
-        public RegistrationsTests(ITestOutputHelper output) : base(output)
+        public RegistrationsTests(ITestOutputHelper output, EmbcWebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
         }
 

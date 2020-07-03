@@ -1,4 +1,5 @@
-﻿using Gov.Jag.Embc.Public.DataInterfaces;
+﻿using Gov.Jag.Embc.Public;
+using Gov.Jag.Embc.Public.DataInterfaces;
 using Gov.Jag.Embc.Public.Models.Db;
 using Gov.Jag.Embc.Public.Seeder;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,7 @@ namespace embc_unit_tests
         private IDataInterface di => Services.ServiceProvider.GetService<IDataInterface>();
         private EmbcDbContext ctx => Services.ServiceProvider.GetService<EmbcDbContext>();
 
-        public LookupDataTests(ITestOutputHelper output) : base(output)
+        public LookupDataTests(ITestOutputHelper output, EmbcWebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
         }
 

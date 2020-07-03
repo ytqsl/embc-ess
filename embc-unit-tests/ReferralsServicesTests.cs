@@ -1,4 +1,5 @@
-﻿using Gov.Jag.Embc.Public.DataInterfaces;
+﻿using Gov.Jag.Embc.Public;
+using Gov.Jag.Embc.Public.DataInterfaces;
 using Gov.Jag.Embc.Public.Models.Db;
 using Gov.Jag.Embc.Public.Services.Referrals;
 using Gov.Jag.Embc.Public.Utils;
@@ -18,7 +19,7 @@ namespace embc_unit_tests
         private IDataInterface di => Services.ServiceProvider.GetService<IDataInterface>();
         private ICurrentUser cus => Services.ServiceProvider.GetService<ICurrentUser>();
 
-        public ReferralsServicesTests(ITestOutputHelper output) : base(output)
+        public ReferralsServicesTests(ITestOutputHelper output, EmbcWebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
         }
 

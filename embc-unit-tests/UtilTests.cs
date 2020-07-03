@@ -1,4 +1,5 @@
-﻿using Gov.Jag.Embc.Public.Utils;
+﻿using Gov.Jag.Embc.Public;
+using Gov.Jag.Embc.Public.Utils;
 using System;
 using Xunit;
 using Xunit.Abstractions;
@@ -7,7 +8,7 @@ namespace embc_unit_tests
 {
     public class UtilTests : TestBase
     {
-        public UtilTests(ITestOutputHelper output) : base(output)
+        public UtilTests(ITestOutputHelper output, EmbcWebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
         }
 

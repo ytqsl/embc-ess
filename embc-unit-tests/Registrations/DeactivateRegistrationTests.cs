@@ -1,4 +1,5 @@
-﻿using Gov.Jag.Embc.Public.DataInterfaces;
+﻿using Gov.Jag.Embc.Public;
+using Gov.Jag.Embc.Public.DataInterfaces;
 using Gov.Jag.Embc.Public.Services.Registrations;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,7 @@ namespace embc_unit_tests.Registrations
         private IMediator mediator => Services.ServiceProvider.GetService<IMediator>();
         private EmbcDbContext db => Services.ServiceProvider.GetService<EmbcDbContext>();
 
-        public DeactivateRegistrationTests(ITestOutputHelper output) : base(output)
+        public DeactivateRegistrationTests(ITestOutputHelper output, EmbcWebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
         }
 

@@ -1,9 +1,12 @@
 ﻿using AutoFixture;
 using AutoMapper;
+using Gov.Jag.Embc.Public;
 using Gov.Jag.Embc.Public.DataInterfaces;
 using Gov.Jag.Embc.Public.ViewModels;
+using Gov.Jag.Embc.Public.ViewModels.Search;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -14,7 +17,7 @@ namespace embc_unit_tests
     {
         private IDataInterface di => Services.ServiceProvider.GetService<IDataInterface>();
 
-        public IncidentTasksTests(ITestOutputHelper output) : base(output)
+        public IncidentTasksTests(ITestOutputHelper output, EmbcWebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
         }
 
@@ -72,6 +75,56 @@ namespace embc_unit_tests
 
             Assert.Equal(source.Active, result.Active);
             Assert.Equal(source.Name, result.Name);
+        }
+
+        [Fact]
+        public async Task CanSearchTasks()
+        {
+            var numberOfActiveTasks = 6;
+            var numberOfInactiveTasks = 7;
+            var fixture = new Fixture();
+
+            var taskBuilder = fixture.Build<IncidentTask>()
+               .Without(t => t.Id)
+               .Without(t => t.Region)
+               .Without(t => t.StartDate)
+               .Without(t => t.TaskNumberStartDate)
+               .Without(t => t.TaskNumberStartDate)
+               .With(t => t.Community, await GetRandomSeededCommunity())
+               .With(t => t.Active, true);
+
+            //inactive tasks
+            var startDate = DateTime.Parse("2020-01-01 13:00");
+            var endDate = DateTime.Parse("2020-01-03 17:00");
+            for (int i = 0; i < numberOfInactiveTasks; i++)
+            {
+                var task = taskBuilder.Create();
+                task.StartDate = startDate;
+                task.TaskNumberStartDate = startDate;
+                task.TaskNumberEndDate = endDate;
+                await di.CreateIncidentTaskAsync(task);
+            }
+
+            //active tasks
+            startDate = DateTime.Now.AddDays(-1);
+            endDate = startDate.AddDays(3).AddHours(5);
+            for (int i = 0; i < numberOfActiveTasks; i++)
+            {
+                var task = taskBuilder.Create();
+                task.StartDate = startDate;
+                task.TaskNumberStartDate = startDate;
+                task.TaskNumberEndDate = endDate;
+                await di.CreateIncidentTaskAsync(task);
+            }
+
+            var allTasks = await di.GetIncidentTasksAsync(new IncidentTaskSearchQueryParameters { ActiveTasks = null });
+            Assert.Equal(numberOfInactiveTasks + numberOfActiveTasks, allTasks.Items.Count());
+
+            var activeTasks = await di.GetIncidentTasksAsync(new IncidentTaskSearchQueryParameters { ActiveTasks = true });
+            Assert.Equal(numberOfActiveTasks, activeTasks.Items.Count());
+
+            var inactiveTasks = await di.GetIncidentTasksAsync(new IncidentTaskSearchQueryParameters { ActiveTasks = false });
+            Assert.Equal(numberOfInactiveTasks, inactiveTasks.Items.Count());
         }
     }
 }

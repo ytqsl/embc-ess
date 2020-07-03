@@ -1,4 +1,5 @@
-﻿using Gov.Jag.Embc.Public.DataInterfaces;
+﻿using Gov.Jag.Embc.Public;
+using Gov.Jag.Embc.Public.DataInterfaces;
 using Gov.Jag.Embc.Public.ViewModels.Search;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace embc_unit_tests
     {
         private IDataInterface di => Services.ServiceProvider.GetService<IDataInterface>();
 
-        public EvacueeTests(ITestOutputHelper output) : base(output)
+        public EvacueeTests(ITestOutputHelper output, EmbcWebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
         }
 

@@ -1,4 +1,5 @@
-﻿using Gov.Jag.Embc.Public.DataInterfaces;
+﻿using Gov.Jag.Embc.Public;
+using Gov.Jag.Embc.Public.DataInterfaces;
 using Gov.Jag.Embc.Public.Services.Registrations;
 using Gov.Jag.Embc.Public.Utils;
 using MediatR;
@@ -17,7 +18,7 @@ namespace embc_unit_tests.Registrations
         private EmbcDbContext db => Services.ServiceProvider.GetService<EmbcDbContext>();
         private IMediator mediator => Services.ServiceProvider.GetService<IMediator>();
 
-        public ViewRegistrationTests(ITestOutputHelper output) : base(output)
+        public ViewRegistrationTests(ITestOutputHelper output, EmbcWebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
         }
 

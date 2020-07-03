@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using Gov.Jag.Embc.Public;
 using Gov.Jag.Embc.Public.DataInterfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace embc_unit_tests
     {
         private IDataInterface di => Services.ServiceProvider.GetService<IDataInterface>();
 
-        public OrganizationsTests(ITestOutputHelper output) : base(output)
+        public OrganizationsTests(ITestOutputHelper output, EmbcWebApplicationFactory<Startup> webApplicationFactory) : base(output, webApplicationFactory)
         {
         }
 
